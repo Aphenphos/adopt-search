@@ -17,32 +17,44 @@ let dogs = [];
 // handler functions
 async function handlePageLoad() {
     const params = new URLSearchParams(window.location.search);
-    // *** set state from params
-    // breed
-    // age (make sure a number, default to 0)
-    // page (make sure a number, default to 1)
-    // pageSize (make sure a number, default to 5)
 
-    // calculate start and end of range from page and pageSize
+    breed = params.get('breed') || '';
+    age = params.get('age') || 0;
+
+    const pageParam = params.get('page');
+    page = pageParam ? Number(pageParam) : 1;
+
+    
+    const pageSizeParam = params.get('pageSize');
+    pageSize = pageSizeParam ? Number(pageSizeParam) : 5;
+    
+    const start = (page - 1) * pageSize;
+    const end = (page * pageSize) - 1;
 
     const { data, count } = await getDogs(breed, age, { start, end });
     dogs = data;
-
-    // set totalPages from calculating based on count and page Size
+    totalPages = Math.ceil(count / pageSize);
 
     display();
 }
 
-function handleFilter(filter) {
+function handleFilter(breed, age) {
     const params = new URLSearchParams(window.location.search);
-    // *** set breed, age, and page params based on filter
+    params.set('breed', breed);
+    params.set('age', age);
+    params.set('page', 1);
+    
     window.location.search = params.toString();
 }
 
 function handlePaging(change, pageSize) {
     const params = new URLSearchParams(window.location.search);
     // *** set page and pageSize params based on change and PageSize
+    page = Math.max(1, page + change);
+
     // make sure page not less than 1
+    params.set('page', page);
+    params.set('pageSize', Number(pageSize));
     window.location.search = params.toString();
 }
 
