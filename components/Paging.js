@@ -21,11 +21,10 @@ export default function createPaging(root, { handlePaging }) {
     });
 
     return ({ page, pageSize, totalPages }) => {
-        selectSize.value = pageSize;
         // *** disable the prev or next button if on page 1 or totalPages
         selectSize.value = pageSize;
-        if (page === 1) prev.disabled;
-        if (page === totalPages) next.disabled;
+        prev.disabled = page === 1;
+        next.disabled = page === totalPages;
 
         pageInfo.textContent = `Page ${page} of ${totalPages}`;
     };

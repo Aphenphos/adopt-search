@@ -17,25 +17,24 @@ let dogs = [];
 // handler functions
 async function handlePageLoad() {
     const params = new URLSearchParams(window.location.search);
-    // *** set state from params
+
     breed = params.get('breed') || '';
     age = params.get('age') || 0;
-    // breed
-    // age (make sure a number, default to 0)
-    page = Number(params.get('page')) || 1;
+
+    const pageParam = params.get('page');
+    page = pageParam ? Number(pageParam) : 1;
+
+    
+    const pageSizeParam = params.get('pageSize');
+    pageSize = pageSizeParam ? Number(pageSizeParam) : 5;
+    
     const start = (page - 1) * pageSize;
     const end = (page * pageSize) - 1;
-    // page (make sure a number, default to 1)
-    // pageSize (make sure a number, default to 5)
-    pageSize = Number(params.get('pageSize')) || 5;
-
-    // calculate start and end of range from page and pageSize
 
     const { data, count } = await getDogs(breed, age, { start, end });
     dogs = data;
-    totalPages = count / pageSize;
+    totalPages = Math.ceil(count / pageSize);
 
-    // set totalPages from calculating based on count and page Size
 
     display();
 }
@@ -46,18 +45,15 @@ function handleFilter(filter) {
     window.location.search = params.toString();
 }
 
-function handlePaging(change, pageNum) {
+function handlePaging(change, pageSize) {
     const params = new URLSearchParams(window.location.search);
     // *** set page and pageSize params based on change and PageSize
-    if (pageNum === pageSize) {
-        page = Math.max(1, page + change);
-    } else {
-        page = 1;
-    }
-    // make sure page not less than 1
+    page = Math.max(1, page + change);
 
+    // make sure page not less than 1
     params.set('page', page);
-    params.set('pageNum', pageNum);
+    params.set('pageSize', Number(pageSize));
+    console.log(pageSize,);
     window.location.search = params.toString();
 }
 
