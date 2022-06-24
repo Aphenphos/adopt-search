@@ -35,13 +35,15 @@ async function handlePageLoad() {
     dogs = data;
     totalPages = Math.ceil(count / pageSize);
 
-
     display();
 }
 
-function handleFilter(filter) {
+function handleFilter(breed, age) {
     const params = new URLSearchParams(window.location.search);
-    // *** set breed, age, and page params based on filter
+    params.set('breed', breed);
+    params.set('age', age);
+    params.set('page', 1);
+    
     window.location.search = params.toString();
 }
 

@@ -9,10 +9,17 @@ export async function getDogs(breed, age, { start, end }) {
         .select(`
         id, 
         name, 
-        breed`,
+        breed,
+        age`,
         { count: 'exact' });
 
-    // *** add breed and age filters if they exist
+    if (breed) {
+        query.match({ breed });
+    }
+
+    if (age) {
+        query.gte('age', age);
+    }
 
     // *** add paging by setting a range modifier
     query = query.range(start, end);
