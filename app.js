@@ -55,7 +55,6 @@ function handlePaging(change, pageSize) {
     // make sure page not less than 1
     params.set('page', page);
     params.set('pageSize', Number(pageSize));
-    console.log(pageSize,);
     window.location.search = params.toString();
 }
 
